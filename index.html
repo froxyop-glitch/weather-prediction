@@ -2,54 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atmosphere - Live Weather</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Merged Weather Planner</title>
+    <script>
+        // 1. Gather all inputs at the top
+        var temp = prompt("Enter the temperature outside (in Fahrenheit):");
+        var sky = prompt("What is it like outside? (Enter: sun, rain, or snow)").toLowerCase().trim();
+
+        // 2. Temperature Logic Function
+        function checkTemperature(temp) {
+            // Convert input to a number to safely compare
+            var numericTemp = Number(temp); 
+
+            if (numericTemp >= 100) {
+                document.write("<p><strong>Temp Advice:</strong> It is scorching. Shorts and a t-shirt, or maybe just stay by the AC.</p>");
+            } else if (numericTemp >= 60) {
+                document.write("<p><strong>Temp Advice:</strong> Perfect weather! Shorts and a t-shirt will do nicely.</p>");
+            } else if (numericTemp >= 40) {
+                document.write("<p><strong>Temp Advice:</strong> Getting a bit nippy. Grab some pants and a light jacket.</p>");
+            } else if (numericTemp >= 0) {
+                document.write("<p><strong>Temp Advice:</strong> It is freezing. Bundle up with a heavy coat and a sweater!</p>");
+            } else if (numericTemp <= -1) {
+                document.write("<p><strong>Temp Advice:</strong> Stay inside! There is no reason to risk frostbite.</p>");
+            } else {
+                document.write("<p><strong>Temp Advice:</strong> That temperature doesn't look right. Please refresh and try again.</p>");
+            }
+        }
+
+        // 3. Sky Condition Logic Function
+        function checkSky(skyCondition) {
+            // Use '===' for comparison and quotes around strings
+            if (skyCondition === "sun") {
+                document.write("<p><strong>Sky Advice:</strong> Enjoy the sunshine! Get outside, unless it's too hot or cold.</p>");
+            } else if (skyCondition === "rain") {
+                document.write("<p><strong>Sky Advice:</strong> Grab an umbrella and a rain jacket so you don't get soaked.</p>");
+            } else if (skyCondition === "snow") {
+                document.write("<p><strong>Sky Advice:</strong> Beautiful snow! Wear waterproof boots and bundle up.</p>");
+            } else {
+                document.write("<p><strong>Sky Advice:</strong> Unknown condition. Make sure to type 'sun', 'rain', or 'snow'.</p>");
+            }
+        }
+
+        // 4. Run both checks sequentially
+        document.write("<h2>Your Local Weather Report:</h2>");
+        checkTemperature(temp);
+        checkSky(sky);
+    </script>
 </head>
 <body>
-    <div class="weather-container">
-        <!-- Search Header -->
-        <div class="search-box">
-            <input type="text" id="city-input" placeholder="Enter city name... (e.g., London, Tokyo)" autocomplete="off">
-            <button id="search-btn">Search</button>
-        </div>
-
-        <!-- Error Handling Display -->
-        <div id="error-message" class="error-box hidden">
-            <p>City not found. Please check your spelling and try again!</p>
-        </div>
-
-        <!-- Main Weather Dashboard Dashboard -->
-        <div id="weather-dashboard" class="dashboard">
-            <div class="main-info">
-                <h1 id="city-name">New York</h1>
-                <p id="weather-desc">Partly Cloudy</p>
-                <div class="temp-display">
-                    <span id="temperature">22</span><span class="unit">°C</span>
-                </div>
-            </div>
-
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <span class="label">Feels Like</span>
-                    <span class="value" id="feels-like">24°C</span>
-                </div>
-                <div class="metric-card">
-                    <span class="label">Humidity</span>
-                    <span class="value" id="humidity">65%</span>
-                </div>
-                <div class="metric-card">
-                    <span class="label">Wind Speed</span>
-                    <span class="value" id="wind-speed">12 km/h</span>
-                </div>
-                <div class="metric-card">
-                    <span class="label">Pressure</span>
-                    <span class="value" id="pressure">1015 hPa</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="app.js"></script>
 </body>
 </html>
