@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atmosphere - Live Weather</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="weather-container">
+        <!-- Search Header -->
+        <div class="search-box">
+            <input type="text" id="city-input" placeholder="Enter city name... (e.g., London, Tokyo)" autocomplete="off">
+            <button id="search-btn">Search</button>
+        </div>
+
+        <!-- Error Handling Display -->
+        <div id="error-message" class="error-box hidden">
+            <p>City not found. Please check your spelling and try again!</p>
+        </div>
+
+        <!-- Main Weather Dashboard Dashboard -->
+        <div id="weather-dashboard" class="dashboard">
+            <div class="main-info">
+                <h1 id="city-name">New York</h1>
+                <p id="weather-desc">Partly Cloudy</p>
+                <div class="temp-display">
+                    <span id="temperature">22</span><span class="unit">°C</span>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="label">Feels Like</span>
+                    <span class="value" id="feels-like">24°C</span>
+                </div>
+                <div class="metric-card">
+                    <span class="label">Humidity</span>
+                    <span class="value" id="humidity">65%</span>
+                </div>
+                <div class="metric-card">
+                    <span class="label">Wind Speed</span>
+                    <span class="value" id="wind-speed">12 km/h</span>
+                </div>
+                <div class="metric-card">
+                    <span class="label">Pressure</span>
+                    <span class="value" id="pressure">1015 hPa</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
