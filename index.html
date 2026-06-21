@@ -2,52 +2,262 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Merged Weather Planner</title>
-    <script>
-        // 1. Gather all inputs at the top
-        var temp = prompt("Enter the temperature outside (in Fahrenheit):");
-        var sky = prompt("What is it like outside? (Enter: sun, rain, or snow)").toLowerCase().trim();
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atmosphere | Pure HTML & Python</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
 
-        // 2. Temperature Logic Function
-        function checkTemperature(temp) {
-            // Convert input to a number to safely compare
-            var numericTemp = Number(temp); 
-
-            if (numericTemp >= 100) {
-                document.write("<p><strong>Temp Advice:</strong> It is scorching. Shorts and a t-shirt, or maybe just stay by the AC.</p>");
-            } else if (numericTemp >= 60) {
-                document.write("<p><strong>Temp Advice:</strong> Perfect weather! Shorts and a t-shirt will do nicely.</p>");
-            } else if (numericTemp >= 40) {
-                document.write("<p><strong>Temp Advice:</strong> Getting a bit nippy. Grab some pants and a light jacket.</p>");
-            } else if (numericTemp >= 0) {
-                document.write("<p><strong>Temp Advice:</strong> It is freezing. Bundle up with a heavy coat and a sweater!</p>");
-            } else if (numericTemp <= -1) {
-                document.write("<p><strong>Temp Advice:</strong> Stay inside! There is no reason to risk frostbite.</p>");
-            } else {
-                document.write("<p><strong>Temp Advice:</strong> That temperature doesn't look right. Please refresh and try again.</p>");
-            }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
-        // 3. Sky Condition Logic Function
-        function checkSky(skyCondition) {
-            // Use '===' for comparison and quotes around strings
-            if (skyCondition === "sun") {
-                document.write("<p><strong>Sky Advice:</strong> Enjoy the sunshine! Get outside, unless it's too hot or cold.</p>");
-            } else if (skyCondition === "rain") {
-                document.write("<p><strong>Sky Advice:</strong> Grab an umbrella and a rain jacket so you don't get soaked.</p>");
-            } else if (skyCondition === "snow") {
-                document.write("<p><strong>Sky Advice:</strong> Beautiful snow! Wear waterproof boots and bundle up.</p>");
-            } else {
-                document.write("<p><strong>Sky Advice:</strong> Unknown condition. Make sure to type 'sun', 'rain', or 'snow'.</p>");
-            }
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
         }
 
-        // 4. Run both checks sequentially
-        document.write("<h2>Your Local Weather Report:</h2>");
-        checkTemperature(temp);
-        checkSky(sky);
-    </script>
+        .weather-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h2 {
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        #city-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: none;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            outline: none;
+            font-size: 0.95rem;
+            transition: 0.3s ease;
+        }
+
+        #city-input::placeholder {
+            color: #ddd;
+        }
+
+        #city-input:focus {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        #search-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(to right, #0072ff, #00c6ff);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        #search-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Visibility Utilities managed by Python */
+        .hide {
+            display: none !important;
+        }
+
+        .error-show {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 0.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        #location {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-top: 1rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 0.5rem 0;
+        }
+
+        #weather-icon {
+            width: 80px;
+            height: 80px;
+        }
+
+        #temperature {
+            font-size: 3.5rem;
+            font-weight: 600;
+        }
+
+        #description {
+            font-style: italic;
+            color: #e0e0e0;
+            margin-bottom: 2rem;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .detail-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .detail-card small {
+            color: #aaa;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+        }
+
+        .detail-card p {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        /* Loading text style */
+        #loading-indicator {
+            font-size: 0.9rem;
+            color: #00c6ff;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
+
+    <div class="weather-container">
+        <h2>Weather Dashboard</h2>
+        <div class="search-box">
+            <input type="text" id="city-input" placeholder="Enter city name..." autocomplete="off">
+            <button id="search-btn" py-click="async_perform_search">Search</button>
+        </div>
+
+        <div id="loading-indicator" class="hide">Loading Python Environment...</div>
+        <div id="error-message" class="hide"></div>
+
+        <div id="weather-display" class="hide">
+            <h1 id="location">---</h1>
+            <div class="info-row">
+                <img id="weather-icon" src="" alt="Weather Icon">
+                <span id="temperature">--°C</span>
+            </div>
+            <p id="description">--</p>
+            
+            <div class="details-grid">
+                <div class="detail-card">
+                    <small>Humidity</small>
+                    <p id="humidity">--%</p>
+                </div>
+                <div class="detail-card">
+                    <small>Wind Speed</small>
+                    <p id="wind-speed">-- m/s</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <py-config>
+        packages = ["pyodide-http"]
+    </py-config>
+
+    <script type="py">
+        import pyodide_http
+        # Patch standard urllib/requests to work directly within web browser assembly layers
+        pyodide_http.patch_all()
+        
+        import requests
+        from js import document, DOMParser
+        from py sidewalk import asyncio # standard async operations handling context
+
+        API_KEY = 'YOUR_OPENWEATHERMAP_API_KEY'
+        BASE_URL = 'https://api.openweathermap.org/data/2.5/weather'
+
+        async def async_perform_search(event):
+            city_input = document.getElementById('city-input').value.strip()
+            error_div = document.getElementById('error-message')
+            display_div = document.getElementById('weather-display')
+            loading_div = document.getElementById('loading-indicator')
+
+            if not city_input:
+                return
+
+            # Reset States
+            error_div.className = 'hide'
+            loading_div.className = ''
+            display_div.className = 'hide'
+
+            params = {
+                'q': city_input,
+                'appid': API_KEY,
+                'units': 'metric'
+            }
+
+            try:
+                # Making standard requests call mapped safely inside browser runtime
+                response = requests.get(BASE_URL, params=params)
+                data = response.json()
+                loading_div.className = 'hide'
+
+                if response.status_code == 200:
+                    document.getElementById('location').innerText = f"{data['name']}, {data['sys']['country']}"
+                    document.getElementById('temperature').innerText = f"{round(data['main']['temp'])}°C"
+                    document.getElementById('description').innerText = data['weather'][0]['description'].title()
+                    document.getElementById('humidity').innerText = f"{data['main']['humidity']}%"
+                    document.getElementById('wind-speed').innerText = f"{data['wind']['speed']} m/s"
+                    
+                    icon_code = data['weather'][0]['icon']
+                    document.getElementById('weather-icon').src = f"https://openweathermap.org/img/wn/{icon_code}@2x.png"
+                    
+                    display_div.className = ''
+                else:
+                    error_msg = data.get('message', 'City not found')
+                    error_div.innerText = error_msg.title()
+                    error_div.className = 'error-show'
+            except Exception as e:
+                loading_div.className = 'hide'
+                error_div.innerText = "Failed to communicate with weather provider."
+                error_div.className = 'error-show'
+    </script>
 </body>
 </html>
