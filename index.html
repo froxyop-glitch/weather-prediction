@@ -3,261 +3,350 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atmosphere | Pure HTML & Python</title>
+    <title>Learn Python Easily</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
-    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
-
     <style>
+        /* Styling resets and base rules */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        :root {
+            --primary: #306998;
+            --secondary: #ffe047;
+            --dark-bg: #1e1e2e;
+            --sidebar-bg: #f1f5f9;
+            --border-color: #cbd5e1;
         }
 
         body {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            min-height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #ffffff;
+            flex-direction: column;
+            height: 100vh;
+            color: #334155;
         }
 
-        .weather-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 2.5rem;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            text-align: center;
-        }
-
-        h2 {
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            letter-spacing: 1px;
-        }
-
-        .search-box {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 1.5rem;
-        }
-
-        #city-input {
-            flex: 1;
-            padding: 0.8rem 1rem;
-            border: none;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            outline: none;
-            font-size: 0.95rem;
-            transition: 0.3s ease;
-        }
-
-        #city-input::placeholder {
-            color: #ddd;
-        }
-
-        #city-input:focus {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        #search-btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 30px;
-            background: linear-gradient(to right, #0072ff, #00c6ff);
+        /* Header style */
+        .main-header {
+            background-color: var(--primary);
             color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        #search-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Visibility Utilities managed by Python */
-        .hide {
-            display: none !important;
-        }
-
-        .error-show {
-            color: #ff6b6b;
-            background: rgba(255, 107, 107, 0.1);
-            padding: 0.5rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-
-        #location {
-            font-size: 2rem;
-            font-weight: 400;
-            margin-top: 1rem;
-        }
-
-        .info-row {
+            padding: 1rem 5%;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
-            margin: 0.5rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        #weather-icon {
-            width: 80px;
-            height: 80px;
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
         }
 
-        #temperature {
-            font-size: 3.5rem;
-            font-weight: 600;
+        .progress-text {
+            font-size: 0.95rem;
         }
 
-        #description {
-            font-style: italic;
-            color: #e0e0e0;
-            margin-bottom: 2rem;
+        /* Dynamic Workspace Setup */
+        .workspace {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
         }
 
-        .details-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+        /* Sidebar tracking navigation */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 1rem;
         }
 
-        .detail-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 1rem;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .detail-card small {
-            color: #aaa;
-            display: block;
-            margin-bottom: 5px;
-            font-size: 0.8rem;
-        }
-
-        .detail-card p {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-        
-        /* Loading text style */
-        #loading-indicator {
-            font-size: 0.9rem;
-            color: #00c6ff;
+        .sidebar h3 {
             margin-bottom: 1rem;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+        }
+
+        .lesson-list {
+            list-style: none;
+        }
+
+        .lesson-list li {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .lesson-list li:hover {
+            background-color: #e2e8f0;
+        }
+
+        .lesson-list li.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Main Content Layout */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            gap: 2rem;
+            overflow-y: auto;
+            background-color: #ffffff;
+        }
+
+        .lesson-body h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .lesson-body p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 800px;
+        }
+
+        /* Sandbox Environment / Terminal Mockup */
+        .sandbox {
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .editor-header, .terminal-header {
+            background-color: #f8fafc;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #code-input {
+            width: 100%;
+            background-color: #fafafa;
+            border: none;
+            padding: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            resize: vertical;
+            outline: none;
+            color: #0f172a;
+        }
+
+        .run-btn {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            padding: 0.35rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .run-btn:hover {
+            background-color: #16a34a;
+        }
+
+        .terminal {
+            background-color: var(--dark-bg);
+            color: #a7f3d0;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 1rem;
+            min-height: 80px;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+        }
+
+        /* Responsiveness patch */
+        @media (max-width: 768px) {
+            .workspace {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="weather-container">
-        <h2>Weather Dashboard</h2>
-        <div class="search-box">
-            <input type="text" id="city-input" placeholder="Enter city name..." autocomplete="off">
-            <button id="search-btn" py-click="async_perform_search">Search</button>
-        </div>
+    <header class="main-header">
+        <div class="logo">🐍 PySimple</div>
+        <nav>
+            <span class="progress-text">Your Progress: <strong id="progress-percent">0%</strong></span>
+        </nav>
+    </header>
 
-        <div id="loading-indicator" class="hide">Loading Python Environment...</div>
-        <div id="error-message" class="hide"></div>
+    <div class="workspace">
+        
+        <aside class="sidebar">
+            <h3>Lessons</h3>
+            <ul class="lesson-list">
+                <li class="active" onclick="loadLesson('variables', event)">1. Variables & Output</li>
+                <li onclick="loadLesson('conditionals', event)">2. Making Decisions</li>
+                <li onclick="loadLesson('loops', event)">3. Loops (Repetition)</li>
+            </ul>
+        </aside>
 
-        <div id="weather-display" class="hide">
-            <h1 id="location">---</h1>
-            <div class="info-row">
-                <img id="weather-icon" src="" alt="Weather Icon">
-                <span id="temperature">--°C</span>
-            </div>
-            <p id="description">--</p>
-            
-            <div class="details-grid">
-                <div class="detail-card">
-                    <small>Humidity</small>
-                    <p id="humidity">--%</p>
+        <main class="content-area">
+            <section class="lesson-body">
+                <h2 id="lesson-title">Loading Lesson...</h2>
+                <p id="lesson-text">Select a lesson from the sidebar to begin learning Python!</p>
+            </section>
+
+            <section class="sandbox">
+                <div class="editor-header">
+                    <span>main.py (Interactive Simulator)</span>
+                    <button class="run-btn" onclick="runPythonSim()">▶ Run Code</button>
                 </div>
-                <div class="detail-card">
-                    <small>Wind Speed</small>
-                    <p id="wind-speed">-- m/s</p>
-                </div>
-            </div>
-        </div>
+                <textarea id="code-input" rows="6" spellcheck="false">print("Hello, World!")</textarea>
+                
+                <div class="terminal-header">Terminal Output:</div>
+                <div id="terminal-output" class="terminal">>_ Click 'Run Code' to see execution results.</div>
+            </section>
+        </main>
     </div>
 
-    <py-config>
-        packages = ["pyodide-http"]
-    </py-config>
+    <script>
+        // Database storing our educational content
+        const lessons = {
+            variables: {
+                title: "Lesson 1: Variables & Printing",
+                text: "In Python, you create variables simply by assigning a value using the '=' sign. You display information on the screen using the print() function. Try changing the name inside the quotes below and run it!",
+                defaultCode: 'name = "Alex"\nprint("Hello, " + name)'
+            },
+            conditionals: {
+                title: "Lesson 2: If/Else Statements",
+                text: "Python uses 'if' and 'else' to make structural decisions based on conditions. Note how Python uses indentation (consistent spaces at the start of a line) to separate code blocks.",
+                defaultCode: 'score = 85\nif score >= 50:\n    print("You passed!")\nelse:\n    print("Try again!")'
+            },
+            loops: {
+                title: "Lesson 3: For Loops",
+                text: "Loops allow you to repeat a section of script multiple times without rewriting it. The range(3) function generates numbers from 0 up to 2, causing the code inside to run three times.",
+                defaultCode: 'for i in range(3):\n    print("Loop iteration running...")'
+            }
+        };
 
-    <script type="py">
-        import pyodide_http
-        # Patch standard urllib/requests to work directly within web browser assembly layers
-        pyodide_http.patch_all()
-        
-        import requests
-        from js import document, DOMParser
-        from py sidewalk import asyncio # standard async operations handling context
+        // Track completed unique items
+        let completedLessons = new Set();
 
-        API_KEY = 'YOUR_OPENWEATHERMAP_API_KEY'
-        BASE_URL = 'https://api.openweathermap.org/data/2.5/weather'
-
-        async def async_perform_search(event):
-            city_input = document.getElementById('city-input').value.strip()
-            error_div = document.getElementById('error-message')
-            display_div = document.getElementById('weather-display')
-            loading_div = document.getElementById('loading-indicator')
-
-            if not city_input:
-                return
-
-            # Reset States
-            error_div.className = 'hide'
-            loading_div.className = ''
-            display_div.className = 'hide'
-
-            params = {
-                'q': city_input,
-                'appid': API_KEY,
-                'units': 'metric'
+        // Handle user changing lessons
+        function loadLesson(lessonId, event) {
+            // UI Update for Active Class Indicator
+            document.querySelectorAll('.lesson-list li').forEach(li => li.classList.remove('active'));
+            
+            // Highlight targeted row item safely
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                // Default setup fallbacks targeting first entry elements array index if page is loading
+                document.querySelector('.lesson-list li').classList.add('active');
             }
 
-            try:
-                # Making standard requests call mapped safely inside browser runtime
-                response = requests.get(BASE_URL, params=params)
-                data = response.json()
-                loading_div.className = 'hide'
+            // Update Text Content and input textarea boxes
+            document.getElementById('lesson-title').innerText = lessons[lessonId].title;
+            document.getElementById('lesson-text').innerText = lessons[lessonId].text;
+            document.getElementById('code-input').value = lessons[lessonId].defaultCode;
+            
+            // Track dynamic completion metrics updating
+            completedLessons.add(lessonId);
+            const progressPercent = Math.round((completedLessons.size / Object.keys(lessons).length) * 100);
+            document.getElementById('progress-percent').innerText = `${progressPercent}%`;
+            
+            // Reset output terminal view state
+            document.getElementById('terminal-output').innerText = ">_ Click 'Run Code' to see execution results.";
+        }
 
-                if response.status_code == 200:
-                    document.getElementById('location').innerText = f"{data['name']}, {data['sys']['country']}"
-                    document.getElementById('temperature').innerText = f"{round(data['main']['temp'])}°C"
-                    document.getElementById('description').innerText = data['weather'][0]['description'].title()
-                    document.getElementById('humidity').innerText = f"{data['main']['humidity']}%"
-                    document.getElementById('wind-speed').innerText = f"{data['wind']['speed']} m/s"
+        // Light Simulated Python Engine Parser logic inside Javascript environment
+        function runPythonSim() {
+            const rawCode = document.getElementById('code-input').value.trim();
+            const outputElement = document.getElementById('terminal-output');
+            let outputLines = [];
+
+            try {
+                // Line-by-line rudimentary logic parser tracking
+                const lines = rawCode.split('\n');
+                let variables = {};
+
+                lines.forEach(line => {
+                    let cleanLine = line.trim();
+                    if (!cleanLine) return; // Skip empty rows
+
+                    // Match assignment declarations: name = "Alex"
+                    if (cleanLine.includes('=') && !cleanLine.startsWith('if') && !cleanLine.startsWith('print')) {
+                        let [varName, varVal] = cleanLine.split('=').map(s => s.trim());
+                        // Remove trailing string container marks if present
+                        variables[varName] = varVal.replace(/['"]/g, '');
+                    }
                     
-                    icon_code = data['weather'][0]['icon']
-                    document.getElementById('weather-icon').src = f"https://openweathermap.org/img/wn/{icon_code}@2x.png"
-                    
-                    display_div.className = ''
-                else:
-                    error_msg = data.get('message', 'City not found')
-                    error_div.innerText = error_msg.title()
-                    error_div.className = 'error-show'
-            except Exception as e:
-                loading_div.className = 'hide'
-                error_div.innerText = "Failed to communicate with weather provider."
-                error_div.className = 'error-show'
+                    // Match basic print execution commands
+                    if (cleanLine.startsWith('print(')) {
+                        let insidePrint = cleanLine.substring(cleanLine.indexOf('(') + 1, cleanLine.lastIndexOf(')'));
+                        
+                        // Variable concatenation parser simulation: "Hello, " + name
+                        if (insidePrint.includes('+')) {
+                            let parts = insidePrint.split('+').map(p => p.trim());
+                            let resultStr = "";
+                            parts.forEach(part => {
+                                if (part.startsWith('"') || part.startsWith("'")) {
+                                    resultStr += part.replace(/['"]/g, '');
+                                } else if (variables[part] !== undefined) {
+                                    resultStr += variables[part];
+                                }
+                            });
+                            outputLines.push(resultStr);
+                        } else {
+                            // Straightforward literal or variable check print output processing logic
+                            let cleanPrintVal = insidePrint.replace(/['"]/g, '');
+                            if (variables[cleanPrintVal] !== undefined) {
+                                outputLines.push(variables[cleanPrintVal]);
+                            } else {
+                                outputLines.push(cleanPrintVal);
+                            }
+                        }
+                    }
+                });
+
+                // Structural condition visual fallback simulator logic patterns
+                if(rawCode.includes('for i in range')) {
+                    outputLines = ["Loop iteration running...", "Loop iteration running...", "Loop iteration running..."];
+                } else if(rawCode.includes('if score >= 50')) {
+                    // Pull conditional value dynamic parsing check
+                    let scoreLine = lines.find(l => l.includes('score ='));
+                    let evaluatedScore = scoreLine ? parseInt(scoreLine.split('=')[1].trim()) : 85;
+                    outputLines = evaluatedScore >= 50 ? ["You passed!"] : ["Try again!"];
+                }
+
+                outputElement.innerText = outputLines.length > 0 ? outputLines.join('\n') : "Code executed successfully (no display output declared).";
+            } catch (err) {
+                outputElement.innerText = "SyntaxError: Unable to parse simulation code statement on this client platform setup.";
+            }
+        }
+
+        // Run default initialization when browser components complete loading elements sequence map
+        window.onload = () => {
+            loadLesson('variables', null);
+            completedLessons.clear(); // Initialize view state metrics display tracker to exactly zero percent layout baseline
+            document.getElementById('progress-percent').innerText = "0% (Start Click)";
+        };
     </script>
 </body>
 </html>
